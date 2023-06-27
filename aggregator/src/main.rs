@@ -1,5 +1,31 @@
+mod pair;
+
 use aggregator::{Summary, Tweet, NewsArticle, self, SummaryDefault, 
-                    SummaryDefault1, notify, notify2};
+                    SummaryDefault1, notify, notify2, returns_summarizable};
+
+use std::fmt::Display;
+
+
+struct Pair1<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair1<T> {
+    fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair1<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
+}
 
 fn main() {
     let tweet = Tweet {
@@ -36,4 +62,13 @@ fn main() {
     println!("New article! {}", article.summarize());
     notify(&tweet, &article);
     notify2(&tweet, &tweet2);
+    let tweet3 = returns_summarizable();
+    println!("1 new tweet : {}", tweet3.summarize());
+
+    let pair: Pair1<i32> = Pair1::new(20, 21);
+    pair.cmp_display();
+
+    let pair1: pair::Pair<f64> = pair::Pair::new(0.0015436, 0.00165478);
+    pair1.cmp_display();
+
 }
